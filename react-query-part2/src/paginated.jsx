@@ -1,11 +1,21 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 function Products() {
-    const [limit, setLimit] = useState(4)
-    const [skip, setSkip] = useState(0)
+    // const [limit, setLimit] = useState(4)
+    // const [skip, setSkip] = useState(0)
 
-   
+    /**
+     * Pagination feature state ke sath use krne pr page refresh krne se filter fir reset ho jata hai.
+     * usse bachne ke liye hm params url ka use krte hai
+     */
+
+    // use params url for pagination
+    const [searchParams, setSearchParams] = useSearchParams({skip:0, limit: 4})
+
+    const skip = parseInt(searchParams.get('skip')) || 0
+    const limit = parseInt(searchParams.get('limit')) || 0
 
 
 
@@ -32,9 +42,14 @@ function Products() {
     // Handle Move
     const handleMove = (moveCount) => {
 
-        setSkip((prevSkip) => {
-            return Math.max(prevSkip + moveCount, 0)
+        setSearchParams((prev) => {
+            prev.set('skip', Math.max(skip + moveCount, 0))
+            return prev
         })
+
+    //     setSkip((prevSkip) => {
+    //         return Math.max(prevSkip + moveCount, 0)
+    //     })
     }
     console.log('skip', skip)
 
